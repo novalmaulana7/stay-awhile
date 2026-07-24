@@ -1,17 +1,60 @@
+class DroppedMessage {
+  final String id;
+  final String authorId;
+  final String authorName;
+  final String text;
+  final double lat;
+  final double lng;
+  final String? locationLabel;
+  final int likeCount;
+  final String? imageUrl;
+
+  DroppedMessage({
+    required this.id,
+    required this.authorId,
+    required this.authorName,
+    required this.text,
+    required this.lat,
+    required this.lng,
+    this.locationLabel,
+    this.likeCount = 0,
+    this.imageUrl,
+  });
+
+  factory DroppedMessage.fromFirestore(
+    Map<String, dynamic> data,
+    String docId,
+  ) {
+    final geo = data['geo'] as Map<String, dynamic>?;
+    final geopoint = geo?['geopoint'] as dynamic;
+    return DroppedMessage(
+      id: docId,
+      authorId: data['authorId'] as String? ?? '',
+      authorName: data['authorName'] as String? ?? '',
+      text: data['text'] as String? ?? '',
+      lat: (geopoint?.latitude as num?)?.toDouble() ?? 0,
+      lng: (geopoint?.longitude as num?)?.toDouble() ?? 0,
+      locationLabel: data['locationLabel'] as String?,
+      likeCount: (data['likeCount'] as num?)?.toInt() ?? 0,
+      imageUrl: data['imageUrl'] as String?,
+    );
+  }
+}
+
 class MapMarker {
   final String id;
   final String message;
   final String icon;
-  final double topPercent;
-  final double leftPercent;
+  final double lat;
+  final double lng;
   final bool isOwn;
 
   MapMarker({
     required this.id,
     required this.message,
     required this.icon,
-    required this.topPercent,
-    required this.leftPercent,
+    required this.lat,
+    required this.lng,
     this.isOwn = false,
   });
 
@@ -20,8 +63,8 @@ class MapMarker {
       id: json['id'] as String,
       message: json['message'] as String,
       icon: json['icon'] as String,
-      topPercent: (json['topPercent'] as num).toDouble(),
-      leftPercent: (json['leftPercent'] as num).toDouble(),
+      lat: (json['lat'] as num).toDouble(),
+      lng: (json['lng'] as num).toDouble(),
       isOwn: json['isOwn'] as bool? ?? false,
     );
   }
@@ -31,8 +74,8 @@ class MapMarker {
       'id': id,
       'message': message,
       'icon': icon,
-      'topPercent': topPercent,
-      'leftPercent': leftPercent,
+      'lat': lat,
+      'lng': lng,
       'isOwn': isOwn,
     };
   }

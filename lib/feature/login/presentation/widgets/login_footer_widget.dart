@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:stay_awhile_mobile/const/app_colors.dart';
 import 'package:stay_awhile_mobile/const/app_textstyle.dart';
 import 'package:stay_awhile_mobile/const/app_size.dart';
 import 'package:stay_awhile_mobile/feature/login/presentation/viewmodels/login_viewmodel.dart';
+import 'package:stay_awhile_mobile/route/app_routes.dart';
 
 /// Footer with error message and sign up link.
 class LoginFooterWidget extends StatelessWidget {
@@ -33,7 +35,7 @@ class LoginFooterWidget extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
-            context.read<LoginViewmodel>().onSignUp();
+            context.go(AppRoutes.register);
           },
           child: Text(
             'Create an account',

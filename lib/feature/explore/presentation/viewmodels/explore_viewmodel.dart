@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:stay_awhile_mobile/feature/explore/data/models/explore_model.dart';
 import 'package:stay_awhile_mobile/feature/explore/data/repositories/explore_repository.dart';
+import 'package:stay_awhile_mobile/utils/services/location_service.dart';
 
 enum ExploreStatus {
   initial,
@@ -11,11 +15,14 @@ enum ExploreStatus {
 
 class ExploreViewmodel extends ChangeNotifier {
   final ExploreRepository _repository;
+  final LocationService _locationService;
 
-  ExploreViewmodel({required ExploreRepository repository})
-      : _repository = repository;
+  ExploreViewmodel({
+    required ExploreRepository repository,
+    LocationService? locationService,
+  })  : _repository = repository,
+        _locationService = locationService ?? LocationService();
 
-  // ── State ──
   ExploreStatus _status = ExploreStatus.initial;
   ExploreStatus get status => _status;
 
@@ -28,6 +35,11 @@ class ExploreViewmodel extends ChangeNotifier {
   double _radiusKm = 1.2;
   double get radiusKm => _radiusKm;
 
+  Position? _currentPosition;
+  Position? get currentPosition => _currentPosition;
+
+  StreamSubscription<List<NearbyMessage>>? _subscription;
+
   String get radiusLabel {
     if (_radiusKm < 1) {
       return '${(_radiusKm * 1000).toStringAsFixed(0)}m away';
@@ -35,22 +47,37 @@ class ExploreViewmodel extends ChangeNotifier {
     return '${_radiusKm.toStringAsFixed(1)}km away';
   }
 
-  // ── Actions ──
-
   Future<void> loadNearbyMessages() async {
     _status = ExploreStatus.loading;
     _errorMessage = null;
     notifyListeners();
 
     try {
-      _messages = await _repository.getNearbyMessages(radiusKm: _radiusKm);
-      _status = ExploreStatus.loaded;
+      _currentPosition = await _locationService.getCurrentPosition();
+      _subscription?.cancel();
+      _subscription = _repository
+          .getNearbyMessages(
+            lat: _currentPosition!.latitude,
+            lng: _currentPosition!.longitude,
+            radiusKm: _radiusKm,
+          )
+          .listen(
+        (messages) {
+          _messages = messages;
+          _status = ExploreStatus.loaded;
+          notifyListeners();
+        },
+        onError: (e) {
+          _status = ExploreStatus.error;
+          _errorMessage = e.toString();
+          notifyListeners();
+        },
+      );
     } catch (e) {
       _status = ExploreStatus.error;
       _errorMessage = e.toString().replaceAll('Exception: ', '');
+      notifyListeners();
     }
-
-    notifyListeners();
   }
 
   void setRadius(double value) {
@@ -65,7 +92,6 @@ class ExploreViewmodel extends ChangeNotifier {
   }
 
   void toggleLike(String messageId) {
-    // TODO: API - Toggle like via Firestore
     final index = _messages.indexWhere((m) => m.id == messageId);
     if (index == -1) return;
 
@@ -84,5 +110,11 @@ class ExploreViewmodel extends ChangeNotifier {
       isCommunityNote: old.isCommunityNote,
     );
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
   }
 }

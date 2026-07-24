@@ -1,23 +1,49 @@
 import 'package:flutter/material.dart';
-import 'package:stay_awhile_mobile/feature/splash/data/repositories/splash_repository.dart';
+import 'package:geolocator/geolocator.dart';
 
-/// ViewModel for the splash screen.
-///
-/// Checks authentication state and determines navigation target.
+enum LocationPermissionStatus {
+  initial,
+  requesting,
+  granted,
+  denied,
+  deniedForever,
+}
+
 class SplashViewmodel extends ChangeNotifier {
-  final SplashRepository _repository;
+  SplashViewmodel();
 
-  SplashViewmodel({required SplashRepository repository})
-      : _repository = repository;
-
-  /// Duration to show splash screen before navigating.
   static const Duration splashDuration = Duration(seconds: 3);
 
-  /// Checks if user is logged in and returns the appropriate route.
-  String getInitialRoute() {
-    if (_repository.isUserLoggedIn()) {
-      return '/dashboard';
+  LocationPermissionStatus _permissionStatus = LocationPermissionStatus.initial;
+  LocationPermissionStatus get permissionStatus => _permissionStatus;
+
+  Future<void> requestLocationPermission() async {
+    _permissionStatus = LocationPermissionStatus.requesting;
+    // Defer notifyListeners to avoid "setState() called during build" error
+    // when this method is called from initState (during build phase)
+    await Future.microtask(() => notifyListeners());
+
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      _permissionStatus = LocationPermissionStatus.denied;
+      notifyListeners();
+      return;
     }
-    return '/login';
+
+    LocationPermission permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+
+    if (permission == LocationPermission.denied) {
+      _permissionStatus = LocationPermissionStatus.denied;
+    } else if (permission == LocationPermission.deniedForever) {
+      _permissionStatus = LocationPermissionStatus.deniedForever;
+    } else {
+      _permissionStatus = LocationPermissionStatus.granted;
+    }
+
+    notifyListeners();
   }
 }

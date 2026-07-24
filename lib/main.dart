@@ -4,12 +4,14 @@ import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:stay_awhile_mobile/const/app_colors.dart';
 import 'package:stay_awhile_mobile/const/app_textstyle.dart';
+import 'package:stay_awhile_mobile/core/auth_notifier.dart';
 import 'package:stay_awhile_mobile/core/dependency_injection.dart';
 import 'package:stay_awhile_mobile/firebase_options.dart';
 import 'package:stay_awhile_mobile/feature/dashboard/presentation/viewmodels/dashboard_viewmodel.dart';
 import 'package:stay_awhile_mobile/feature/explore/presentation/viewmodels/explore_viewmodel.dart';
 import 'package:stay_awhile_mobile/feature/profile/presentation/viewmodels/profile_viewmodel.dart';
 import 'package:stay_awhile_mobile/feature/login/presentation/viewmodels/login_viewmodel.dart';
+import 'package:stay_awhile_mobile/feature/register/presentation/viewmodels/register_viewmodel.dart';
 import 'package:stay_awhile_mobile/feature/splash/presentation/viewmodels/splash_viewmodel.dart';
 import 'package:stay_awhile_mobile/route/app_router.dart';
 
@@ -27,9 +29,11 @@ class StayAwhileApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => GetIt.I<AuthNotifier>()),
         ChangeNotifierProvider(create: (_) => GetIt.I<SplashViewmodel>()),
         ChangeNotifierProvider(create: (_) => GetIt.I<ProfileViewmodel>()),
         ChangeNotifierProvider(create: (_) => GetIt.I<LoginViewmodel>()),
+        ChangeNotifierProvider(create: (_) => GetIt.I<RegisterViewmodel>()),
         ChangeNotifierProvider(create: (_) => GetIt.I<DashboardViewmodel>()),
         ChangeNotifierProvider(create: (_) => GetIt.I<ExploreViewmodel>()),
       ],

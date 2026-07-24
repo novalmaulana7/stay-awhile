@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:stay_awhile_mobile/feature/profile/data/models/profile_model.dart';
 import 'package:stay_awhile_mobile/feature/profile/data/repositories/profile_repository.dart';
 
@@ -54,20 +56,29 @@ class ProfileViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Deletes a dropped message by its id (local state only).
-  /// TODO: API - Call backend delete endpoint.
-  void deleteMessage(String messageId) {
-    _droppedMessages = _droppedMessages.where((m) => m.id != messageId).toList();
-    notifyListeners();
+  Future<void> deleteMessage(String messageId) async {
+    try {
+      await _repository.deleteMessage(messageId);
+      _droppedMessages = _droppedMessages.where((m) => m.id != messageId).toList();
+      if (_profile != null) {
+        _profile = _profile!.copyWith(
+          messagesDropped: _profile!.messagesDropped - 1,
+        );
+      }
+      notifyListeners();
+    } catch (e) {
+      _errorMessage = e.toString();
+      notifyListeners();
+    }
   }
 
   /// Shows a confirmation dialog and deletes the message if confirmed.
   Future<void> confirmAndDeleteMessage(
     BuildContext context,
     String messageId,
-  ) {
+  ) async {
     final message = _droppedMessages.firstWhere((m) => m.id == messageId);
-    return showDialog<bool>(
+    final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Remove memory?'),
@@ -83,11 +94,10 @@ class ProfileViewmodel extends ChangeNotifier {
           ),
         ],
       ),
-    ).then((confirmed) {
-      if (confirmed == true) {
-        deleteMessage(messageId);
-      }
-    });
+    );
+    if (confirmed == true) {
+      await deleteMessage(messageId);
+    }
   }
 
   // ── Navigation actions (TODOs) ──
@@ -124,7 +134,8 @@ class ProfileViewmodel extends ChangeNotifier {
     // TODO: Navigate to support center page
   }
 
-  void onLogout() {
-    // TODO: Implement logout
+  Future<void> onLogout() async {
+    await GoogleSignIn().signOut();
+    await FirebaseAuth.instance.signOut();
   }
 }

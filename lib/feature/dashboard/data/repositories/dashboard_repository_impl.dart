@@ -29,11 +29,18 @@ class DashboardRepositoryImpl implements DashboardRepository {
 
   @override
   Future<void> dropMessage({
-    required String message,
-    required String icon,
+    required String text,
+    required double lat,
+    required double lng,
+    String? locationLabel,
   }) async {
     try {
-      await _remoteDataSource.dropMessage(message: message, icon: icon);
+      await _remoteDataSource.dropMessage(
+        text: text,
+        lat: lat,
+        lng: lng,
+        locationLabel: locationLabel,
+      );
     } catch (e) {
       throw Exception('Failed to drop message: ${e.toString()}');
     }

@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stay_awhile_mobile/const/app_size.dart';
 import 'package:stay_awhile_mobile/feature/login/presentation/viewmodels/login_viewmodel.dart';
-import 'package:stay_awhile_mobile/feature/login/presentation/widgets/login_email_field_widget.dart';
-import 'package:stay_awhile_mobile/feature/login/presentation/widgets/login_password_field_widget.dart';
+import 'package:stay_awhile_mobile/utils/widgets/text_field_widget.dart';
 import 'package:stay_awhile_mobile/feature/login/presentation/widgets/login_remember_me_checkbox_widget.dart';
 import 'package:stay_awhile_mobile/feature/login/presentation/widgets/login_sign_in_button_widget.dart';
 import 'package:stay_awhile_mobile/feature/login/presentation/widgets/login_footer_widget.dart';
@@ -57,7 +56,9 @@ class LoginFormWidget extends StatelessWidget {
               isLoading: status == LoginStatus.loading,
               onPressed: () {
                 context.read<LoginViewmodel>().setEmail(emailController.text);
-                context.read<LoginViewmodel>().setPassword(passwordController.text);
+                context.read<LoginViewmodel>().setPassword(
+                  passwordController.text,
+                );
                 context.read<LoginViewmodel>().login();
               },
             );

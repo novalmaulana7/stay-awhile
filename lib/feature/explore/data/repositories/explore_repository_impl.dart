@@ -10,11 +10,17 @@ class ExploreRepositoryImpl implements ExploreRepository {
   }) : _remoteDataSource = remoteDataSource;
 
   @override
-  Future<List<NearbyMessage>> getNearbyMessages({
+  Stream<List<NearbyMessage>> getNearbyMessages({
+    required double lat,
+    required double lng,
     required double radiusKm,
-  }) async {
+  }) {
     try {
-      return await _remoteDataSource.getNearbyMessages(radiusKm: radiusKm);
+      return _remoteDataSource.getNearbyMessages(
+        lat: lat,
+        lng: lng,
+        radiusKm: radiusKm,
+      );
     } catch (e) {
       throw Exception('Failed to load nearby messages: ${e.toString()}');
     }

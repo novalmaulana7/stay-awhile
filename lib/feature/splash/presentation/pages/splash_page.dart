@@ -7,6 +7,7 @@ import 'package:stay_awhile_mobile/feature/splash/presentation/viewmodels/splash
 import 'package:stay_awhile_mobile/feature/splash/presentation/widgets/splash_logo_widget.dart';
 import 'package:stay_awhile_mobile/feature/splash/presentation/widgets/splash_brand_widget.dart';
 import 'package:stay_awhile_mobile/feature/splash/presentation/widgets/splash_ornament_widget.dart';
+import 'package:stay_awhile_mobile/route/app_routes.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -90,10 +91,11 @@ class _SplashPageState extends State<SplashPage>
       if (mounted) _ornamentController.forward();
     });
 
+    context.read<SplashViewmodel>().requestLocationPermission();
+
     Future.delayed(SplashViewmodel.splashDuration, () {
       if (!mounted) return;
-      final route = context.read<SplashViewmodel>().getInitialRoute();
-      context.go(route);
+      context.go(AppRoutes.dashboard);
     });
   }
 

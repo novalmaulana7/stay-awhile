@@ -111,10 +111,19 @@ class _DashboardPageState extends State<DashboardPage> {
                 return Stack(
                   children: [
                     Positioned.fill(
-                      child: Selector<DashboardViewmodel, List<MapMarker>>(
-                        selector: (_, vm) => vm.markers,
-                        builder: (_, markers, __) {
-                          return DashboardMapCanvasWidget(markers: markers);
+                      child: Selector<DashboardViewmodel,
+                          ({List<MapMarker> markers, double lat, double lng})>(
+                        selector: (_, vm) => (
+                          markers: vm.markers,
+                          lat: vm.currentPosition?.latitude ?? -6.8912,
+                          lng: vm.currentPosition?.longitude ?? 107.6110,
+                        ),
+                        builder: (_, data, __) {
+                          return DashboardMapCanvasWidget(
+                            markers: data.markers,
+                            centerLat: data.lat,
+                            centerLng: data.lng,
+                          );
                         },
                       ),
                     ),

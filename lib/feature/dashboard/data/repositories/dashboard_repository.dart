@@ -4,7 +4,9 @@ abstract class DashboardRepository {
   Future<List<MapMarker>> getMapMarkers();
   Future<LocationInfo> getCurrentLocation();
   Future<void> dropMessage({
-    required String message,
-    required String icon,
+    required String text,
+    required double lat,
+    required double lng,
+    String? locationLabel,
   });
 }

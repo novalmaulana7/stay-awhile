@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class ProfileModel {
   final String id;
   final String name;
@@ -18,6 +20,23 @@ class ProfileModel {
     required this.memberSince,
     required this.appVersion,
   });
+
+  factory ProfileModel.fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> doc,
+  ) {
+    final data = doc.data()!;
+    final joinDate = (data['joinDate'] as Timestamp?)?.toDate();
+    return ProfileModel(
+      id: doc.id,
+      name: data['displayName'] as String? ?? '',
+      bio: data['bio'] as String? ?? '',
+      avatarUrl: data['photoUrl'] as String? ?? '',
+      messagesDropped: (data['messagesDropped'] as num?)?.toInt() ?? 0,
+      messagesFound: (data['messagesFound'] as num?)?.toInt() ?? 0,
+      memberSince: joinDate != null ? '${joinDate.year}' : '',
+      appVersion: '1.0.0',
+    );
+  }
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
     return ProfileModel(
@@ -68,7 +87,6 @@ class ProfileModel {
   }
 }
 
-/// Model for a dropped message item shown in the profile list.
 class DroppedMessageModel {
   final String id;
   final String title;
@@ -85,6 +103,22 @@ class DroppedMessageModel {
     required this.imageUrl,
     required this.previewText,
   });
+
+  factory DroppedMessageModel.fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> doc,
+  ) {
+    final data = doc.data()!;
+    final createdAt = (data['createdAt'] as Timestamp?)?.toDate();
+    final timeAgo = createdAt != null ? _formatTimeAgo(createdAt) : 'just now';
+    return DroppedMessageModel(
+      id: doc.id,
+      title: data['text'] as String? ?? '',
+      location: data['locationLabel'] as String? ?? 'Unknown location',
+      timeAgo: 'Dropped $timeAgo',
+      imageUrl: data['imageUrl'] as String? ?? '',
+      previewText: '"${data['text'] as String? ?? ''}"',
+    );
+  }
 
   factory DroppedMessageModel.fromJson(Map<String, dynamic> json) {
     return DroppedMessageModel(
@@ -106,5 +140,15 @@ class DroppedMessageModel {
       'image_url': imageUrl,
       'preview_text': previewText,
     };
+  }
+
+  static String _formatTimeAgo(DateTime date) {
+    final diff = DateTime.now().difference(date);
+    if (diff.inMinutes < 1) return 'just now';
+    if (diff.inMinutes < 60) return '${diff.inMinutes} mins ago';
+    if (diff.inHours < 24) return '${diff.inHours} hours ago';
+    if (diff.inDays < 7) return '${diff.inDays} days ago';
+    if (diff.inDays < 30) return '${(diff.inDays / 7).floor()} weeks ago';
+    return '${(diff.inDays / 30).floor()} months ago';
   }
 }

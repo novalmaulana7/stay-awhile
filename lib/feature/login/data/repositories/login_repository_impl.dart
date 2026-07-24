@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:stay_awhile_mobile/feature/login/data/datasources/login_remote_datasource.dart';
 import 'package:stay_awhile_mobile/feature/login/data/repositories/login_repository.dart';
 
-/// Implementation of LoginRepository.
 class LoginRepositoryImpl implements LoginRepository {
   final LoginRemoteDataSource _remoteDataSource;
 
@@ -22,7 +21,6 @@ class LoginRepositoryImpl implements LoginRepository {
       );
       return result.user?.uid ?? '';
     } on FirebaseAuthException catch (e) {
-      // TODO: API - Handle specific error cases properly
       throw _mapFirebaseError(e);
     } catch (e) {
       throw Exception('An unexpected error occurred: ${e.toString()}');
@@ -53,7 +51,15 @@ class LoginRepositoryImpl implements LoginRepository {
     }
   }
 
-  /// Maps Firebase auth exceptions to user-friendly error messages.
+  @override
+  Future<void> createUserDocument(User user) async {
+    try {
+      await _remoteDataSource.createUserDocument(user);
+    } catch (e) {
+      throw Exception('Failed to create user profile: ${e.toString()}');
+    }
+  }
+
   String _mapFirebaseError(FirebaseAuthException e) {
     switch (e.code) {
       case 'user-not-found':

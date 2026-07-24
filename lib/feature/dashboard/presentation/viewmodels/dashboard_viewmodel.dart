@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:stay_awhile_mobile/feature/dashboard/data/models/dashboard_model.dart';
 import 'package:stay_awhile_mobile/feature/dashboard/data/repositories/dashboard_repository.dart';
+import 'package:stay_awhile_mobile/utils/services/location_service.dart';
 
 enum DashboardStatus {
   initial,
@@ -11,11 +13,14 @@ enum DashboardStatus {
 
 class DashboardViewmodel extends ChangeNotifier {
   final DashboardRepository _repository;
+  final LocationService _locationService;
 
-  DashboardViewmodel({required DashboardRepository repository})
-      : _repository = repository;
+  DashboardViewmodel({
+    required DashboardRepository repository,
+    LocationService? locationService,
+  })  : _repository = repository,
+        _locationService = locationService ?? LocationService();
 
-  // ── State ──
   DashboardStatus _status = DashboardStatus.initial;
   DashboardStatus get status => _status;
 
@@ -28,10 +33,14 @@ class DashboardViewmodel extends ChangeNotifier {
   LocationInfo? _locationInfo;
   LocationInfo? get locationInfo => _locationInfo;
 
+  Position? _currentPosition;
+  Position? get currentPosition => _currentPosition;
+
+  String? _currentAddress;
+  String? get currentAddress => _currentAddress;
+
   bool _showDropDialog = false;
   bool get showDropDialog => _showDropDialog;
-
-  // ── Actions ──
 
   Future<void> loadDashboard() async {
     _status = DashboardStatus.loading;
@@ -39,6 +48,12 @@ class DashboardViewmodel extends ChangeNotifier {
     notifyListeners();
 
     try {
+      _currentPosition = await _locationService.getCurrentPosition();
+      _currentAddress = await _locationService.reverseGeocode(
+        _currentPosition!.latitude,
+        _currentPosition!.longitude,
+      );
+
       final results = await Future.wait([
         _repository.getMapMarkers(),
         _repository.getCurrentLocation(),
@@ -65,11 +80,21 @@ class DashboardViewmodel extends ChangeNotifier {
   }
 
   Future<void> dropMessage({
-    required String message,
-    required String icon,
+    required String text,
   }) async {
+    if (_currentPosition == null) {
+      _errorMessage = 'Location not available';
+      notifyListeners();
+      return;
+    }
+
     try {
-      await _repository.dropMessage(message: message, icon: icon);
+      await _repository.dropMessage(
+        text: text,
+        lat: _currentPosition!.latitude,
+        lng: _currentPosition!.longitude,
+        locationLabel: _currentAddress,
+      );
       _showDropDialog = false;
       await loadDashboard();
     } catch (e) {

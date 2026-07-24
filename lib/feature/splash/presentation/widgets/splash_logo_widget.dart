@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stay_awhile_mobile/const/app_assets.dart';
 import 'package:stay_awhile_mobile/const/app_size.dart';
 
 class SplashLogoWidget extends StatelessWidget {
@@ -14,7 +15,7 @@ class SplashLogoWidget extends StatelessWidget {
     return Transform.translate(
       offset: Offset(0, bounceOffset),
       child: Image.asset(
-        'assets/images/logo_app.png',
+        AppAssets.logoApp,
         width: size,
         height: size,
         fit: BoxFit.contain,
