@@ -8,4 +8,8 @@ class AppAssets {
   // ── Images ──
   static const String logoApp = 'assets/images/logo_app.png';
   static const String logoAppBar = 'assets/images/logo_app_bar.png';
+
+  // ── JSON ──
+  static const String circularProgressIndicator =
+      'assets/json/circular_progress_indicator.json';
 }

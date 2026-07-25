@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:stay_awhile_mobile/const/app_colors.dart';
 import 'package:stay_awhile_mobile/const/app_textstyle.dart';
 import 'package:stay_awhile_mobile/const/app_size.dart';
-import 'package:stay_awhile_mobile/utils/widgets/paper_card.dart';
+import 'package:stay_awhile_mobile/utils/widgets/app_paper_card_widget.dart';
 
 /// A single stat card showing a value and label (e.g. Messages Dropped / Found).
 class StatCardWidget extends StatelessWidget {
@@ -19,7 +19,7 @@ class StatCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PaperCard(
+    return AppPaperCardWidget(
       child: Column(
         children: [
           Text(

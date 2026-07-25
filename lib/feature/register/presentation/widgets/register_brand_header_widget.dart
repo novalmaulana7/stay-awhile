@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stay_awhile_mobile/const/app_colors.dart';
 import 'package:stay_awhile_mobile/const/app_assets.dart';
-import 'package:stay_awhile_mobile/const/app_size.dart';
-import 'package:stay_awhile_mobile/const/app_textstyle.dart';
 
 /// Brand header with logo and app name for register page.
 class RegisterBrandHeaderWidget extends StatelessWidget {
@@ -13,20 +10,10 @@ class RegisterBrandHeaderWidget extends StatelessWidget {
     return Column(
       children: [
         Image.asset(
-          AppAssets.logoApp,
-          width: 64,
-          height: 64,
+          AppAssets.logoAppBar,
+          width: 250,
+          height: 250,
           fit: BoxFit.contain,
-          errorBuilder: (context, error, stackTrace) {
-            return const Icon(Icons.park, size: 64, color: AppColors.primary);
-          },
-        ),
-        const SizedBox(height: AppSize.spacingMd),
-        Text(
-          'Stay Awhile',
-          style: AppTextStyle.headlineLgMobile.copyWith(
-            color: AppColors.primary,
-          ),
         ),
       ],
     );

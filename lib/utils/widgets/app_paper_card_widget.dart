@@ -3,13 +3,21 @@ import 'package:stay_awhile_mobile/const/app_colors.dart';
 import 'package:stay_awhile_mobile/const/app_size.dart';
 
 /// Reusable paper card container matching the HTML `.paper-card` style.
-/// Uses white background, subtle border, and soft shadow.
-class PaperCard extends StatelessWidget {
+///
+/// Renders a white card with subtle border and soft shadow, matching
+/// the warm paper aesthetic of the Stay Awhile design system.
+///
+/// ```dart
+/// AppPaperCardWidget(
+///   child: Text('Hello'),
+/// )
+/// ```
+class AppPaperCardWidget extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry? padding;
   final double? borderRadius;
 
-  const PaperCard({
+  const AppPaperCardWidget({
     super.key,
     required this.child,
     this.padding,

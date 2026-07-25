@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class ProfileModel {
   final String id;
   final String name;
+  final String email;
   final String bio;
   final String avatarUrl;
   final int messagesDropped;
@@ -13,6 +14,7 @@ class ProfileModel {
   ProfileModel({
     required this.id,
     required this.name,
+    required this.email,
     required this.bio,
     required this.avatarUrl,
     required this.messagesDropped,
@@ -29,6 +31,7 @@ class ProfileModel {
     return ProfileModel(
       id: doc.id,
       name: data['displayName'] as String? ?? '',
+      email: data['email'] as String? ?? '',
       bio: data['bio'] as String? ?? '',
       avatarUrl: data['photoUrl'] as String? ?? '',
       messagesDropped: (data['messagesDropped'] as num?)?.toInt() ?? 0,
@@ -42,6 +45,7 @@ class ProfileModel {
     return ProfileModel(
       id: json['id'] as String? ?? '',
       name: json['name'] as String? ?? '',
+      email: json['email'] as String? ?? '',
       bio: json['bio'] as String? ?? '',
       avatarUrl: json['avatar_url'] as String? ?? '',
       messagesDropped: json['messages_dropped'] as int? ?? 0,
@@ -55,6 +59,7 @@ class ProfileModel {
     return {
       'id': id,
       'name': name,
+      'email': email,
       'bio': bio,
       'avatar_url': avatarUrl,
       'messages_dropped': messagesDropped,
@@ -67,6 +72,7 @@ class ProfileModel {
   ProfileModel copyWith({
     String? id,
     String? name,
+    String? email,
     String? bio,
     String? avatarUrl,
     int? messagesDropped,
@@ -77,6 +83,7 @@ class ProfileModel {
     return ProfileModel(
       id: id ?? this.id,
       name: name ?? this.name,
+      email: email ?? this.email,
       bio: bio ?? this.bio,
       avatarUrl: avatarUrl ?? this.avatarUrl,
       messagesDropped: messagesDropped ?? this.messagesDropped,

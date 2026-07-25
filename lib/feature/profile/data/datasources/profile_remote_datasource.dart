@@ -19,8 +19,22 @@ class ProfileRemoteDataSource {
   }
 
   Future<ProfileModel> fetchProfile() async {
-    final doc = await _firestore.collection('users').doc(_uid).get();
-    if (!doc.exists) throw Exception('Profile not found');
+    final docRef = _firestore.collection('users').doc(_uid);
+    final doc = await docRef.get();
+    if (!doc.exists) {
+      final user = _auth.currentUser;
+      await docRef.set({
+        'displayName': user?.displayName ?? '',
+        'email': user?.email ?? '',
+        'photoUrl': user?.photoURL,
+        'bio': null,
+        'joinDate': FieldValue.serverTimestamp(),
+        'messagesDropped': 0,
+        'messagesFound': 0,
+      });
+      final created = await docRef.get();
+      return ProfileModel.fromFirestore(created);
+    }
     return ProfileModel.fromFirestore(doc);
   }
 

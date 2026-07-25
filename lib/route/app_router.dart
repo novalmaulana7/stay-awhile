@@ -2,12 +2,14 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:stay_awhile_mobile/core/auth_notifier.dart';
 import 'package:stay_awhile_mobile/feature/dashboard/presentation/pages/dashboard_page.dart';
+import 'package:stay_awhile_mobile/feature/drop/presentation/pages/drop_page.dart';
 import 'package:stay_awhile_mobile/feature/explore/presentation/pages/explore_page.dart';
 import 'package:stay_awhile_mobile/feature/profile/presentation/pages/profile_page.dart';
 import 'package:stay_awhile_mobile/feature/login/presentation/pages/login_page.dart';
 import 'package:stay_awhile_mobile/feature/register/presentation/pages/register_page.dart';
 import 'package:stay_awhile_mobile/feature/splash/presentation/pages/splash_page.dart';
 import 'package:stay_awhile_mobile/route/app_routes.dart';
+import 'package:stay_awhile_mobile/route/app_shell_widget.dart';
 
 final authNotifier = GetIt.I<AuthNotifier>();
 
@@ -17,7 +19,8 @@ final GoRouter appRouter = GoRouter(
   refreshListenable: authNotifier,
   redirect: (context, state) {
     final user = authNotifier.currentUser;
-    final onAuthRoute = state.matchedLocation == AppRoutes.splash ||
+    final onAuthRoute =
+        state.matchedLocation == AppRoutes.splash ||
         state.matchedLocation == AppRoutes.login ||
         state.matchedLocation == AppRoutes.register;
 
@@ -42,19 +45,43 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => const RegisterPage(),
     ),
     GoRoute(
-      path: AppRoutes.dashboard,
-      name: 'dashboard',
-      builder: (context, state) => const DashboardPage(),
+      path: AppRoutes.drop,
+      name: 'drop',
+      builder: (context, state) => const DropPage(),
     ),
-    GoRoute(
-      path: AppRoutes.explore,
-      name: 'explore',
-      builder: (context, state) => const ExplorePage(),
-    ),
-    GoRoute(
-      path: AppRoutes.profile,
-      name: 'profile',
-      builder: (context, state) => const ProfilePage(),
+    StatefulShellRoute.indexedStack(
+      builder: (context, state, navigationShell) {
+        return AppShellWidget(navigationShell: navigationShell);
+      },
+      branches: [
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoutes.dashboard,
+              name: 'dashboard',
+              builder: (context, state) => const DashboardPage(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoutes.explore,
+              name: 'explore',
+              builder: (context, state) => const ExplorePage(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoutes.profile,
+              name: 'profile',
+              builder: (context, state) => const ProfilePage(),
+            ),
+          ],
+        ),
+      ],
     ),
   ],
 );

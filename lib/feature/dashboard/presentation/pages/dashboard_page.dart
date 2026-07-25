@@ -10,7 +10,6 @@ import 'package:stay_awhile_mobile/feature/dashboard/presentation/widgets/dashbo
 import 'package:stay_awhile_mobile/feature/dashboard/presentation/widgets/dashboard_location_card_widget.dart';
 import 'package:stay_awhile_mobile/feature/dashboard/presentation/widgets/dashboard_drop_message_button_widget.dart';
 import 'package:stay_awhile_mobile/route/app_routes.dart';
-import 'package:stay_awhile_mobile/utils/widgets/bottom_nav_widget.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -48,22 +47,6 @@ class _DashboardPageState extends State<DashboardPage> {
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavWidget(
-        items: const [
-          BottomNavItem(icon: Icons.map, label: 'Map'),
-          BottomNavItem(icon: Icons.explore, label: 'Explorer'),
-          BottomNavItem(icon: Icons.person, label: 'Profile'),
-        ],
-        activeIndex: 0,
-        onTabChanged: (index) {
-          final routes = [
-            AppRoutes.dashboard,
-            AppRoutes.explore,
-            AppRoutes.profile,
-          ];
-          context.go(routes[index]);
-        },
       ),
       body: Column(
         children: [
@@ -147,13 +130,16 @@ class _DashboardPageState extends State<DashboardPage> {
                       left: 0,
                       right: 0,
                       child: Center(
-                        child: Selector<DashboardViewmodel, bool>(
-                          selector: (_, vm) => vm.showDropDialog,
-                          builder: (_, showDrop, __) {
-                            return DashboardDropMessageButtonWidget(
-                              onPressed: () => context
-                                  .read<DashboardViewmodel>()
-                                  .toggleDropDialog(),
+                        child: DashboardDropMessageButtonWidget(
+                          onPressed: () {
+                            final vm = context.read<DashboardViewmodel>();
+                            context.push(
+                              AppRoutes.drop,
+                              extra: {
+                                'lat': vm.currentPosition?.latitude ?? -6.8912,
+                                'lng': vm.currentPosition?.longitude ?? 107.6110,
+                                'locationLabel': vm.currentAddress ?? 'Unknown location',
+                              },
                             );
                           },
                         ),

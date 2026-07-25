@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:stay_awhile_mobile/const/app_colors.dart';
 import 'package:stay_awhile_mobile/const/app_textstyle.dart';
 import 'package:stay_awhile_mobile/const/app_size.dart';
-import 'package:stay_awhile_mobile/utils/widgets/paper_card.dart';
+import 'package:stay_awhile_mobile/utils/widgets/app_paper_card_widget.dart';
 import 'package:stay_awhile_mobile/feature/profile/data/models/profile_model.dart';
 
 /// A single dropped message card in the profile list.
@@ -20,7 +20,7 @@ class DroppedMessageItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PaperCard(
+    return AppPaperCardWidget(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

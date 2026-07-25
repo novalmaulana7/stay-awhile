@@ -6,8 +6,9 @@ import 'package:stay_awhile_mobile/const/app_colors.dart';
 import 'package:stay_awhile_mobile/const/app_textstyle.dart';
 import 'package:stay_awhile_mobile/core/auth_notifier.dart';
 import 'package:stay_awhile_mobile/core/dependency_injection.dart';
-import 'package:stay_awhile_mobile/firebase_options.dart';
+import 'package:stay_awhile_mobile/core/firebase_options.dart';
 import 'package:stay_awhile_mobile/feature/dashboard/presentation/viewmodels/dashboard_viewmodel.dart';
+import 'package:stay_awhile_mobile/feature/drop/presentation/viewmodels/drop_viewmodel.dart';
 import 'package:stay_awhile_mobile/feature/explore/presentation/viewmodels/explore_viewmodel.dart';
 import 'package:stay_awhile_mobile/feature/profile/presentation/viewmodels/profile_viewmodel.dart';
 import 'package:stay_awhile_mobile/feature/login/presentation/viewmodels/login_viewmodel.dart';
@@ -36,6 +37,7 @@ class StayAwhileApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => GetIt.I<RegisterViewmodel>()),
         ChangeNotifierProvider(create: (_) => GetIt.I<DashboardViewmodel>()),
         ChangeNotifierProvider(create: (_) => GetIt.I<ExploreViewmodel>()),
+        ChangeNotifierProvider(create: (_) => GetIt.I<DropViewmodel>()),
       ],
       child: MaterialApp.router(
         title: 'Stay Awhile',

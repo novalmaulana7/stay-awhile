@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:stay_awhile_mobile/const/app_colors.dart';
 import 'package:stay_awhile_mobile/const/app_textstyle.dart';
 import 'package:stay_awhile_mobile/const/app_size.dart';
+import 'package:stay_awhile_mobile/utils/widgets/app_bottom_sheet_widget.dart';
 
 /// Displays the logout button and app version info.
 class LogoutSectionWidget extends StatelessWidget {
@@ -21,13 +22,21 @@ class LogoutSectionWidget extends StatelessWidget {
         SizedBox(
           width: double.infinity,
           child: OutlinedButton.icon(
-            onPressed: onLogout,
+            onPressed: () => AppBottomSheetWidget.show(
+              context: context,
+              icon: Icons.logout_rounded,
+              iconColor: AppColors.secondary,
+              title: 'Logout?',
+              message: 'Are you sure you want to logout from Stay Awhile?',
+              confirmLabel: 'Logout',
+              confirmColor: AppColors.error,
+              confirmTextColor: AppColors.white,
+              onConfirm: () => onLogout?.call(),
+            ),
             icon: const Icon(Icons.logout, size: 20),
             label: Text(
               'Logout from Stay Awhile',
-              style: AppTextStyle.labelMd.copyWith(
-                color: AppColors.secondary,
-              ),
+              style: AppTextStyle.labelMd.copyWith(color: AppColors.secondary),
             ),
             style: OutlinedButton.styleFrom(
               foregroundColor: AppColors.secondary,

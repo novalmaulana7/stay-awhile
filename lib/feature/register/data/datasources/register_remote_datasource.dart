@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class RegisterRemoteDataSource {
   final FirebaseAuth _auth;
@@ -25,34 +23,6 @@ class RegisterRemoteDataSource {
     await credential.user?.updateDisplayName(fullName);
     await _createUserDocument(credential.user!, fullName: fullName);
     return credential;
-  }
-
-  Future<UserCredential> registerWithGoogle() async {
-    final googleUser = await GoogleSignIn().signIn();
-    final googleAuth = await googleUser!.authentication;
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-    final result = await _auth.signInWithCredential(credential);
-    await _createUserDocument(result.user!);
-    return result;
-  }
-
-  Future<UserCredential> registerWithApple() async {
-    final appleCredential = await SignInWithApple.getAppleIDCredential(
-      scopes: [
-        AppleIDAuthorizationScopes.email,
-        AppleIDAuthorizationScopes.fullName,
-      ],
-    );
-    final oauthCredential = OAuthProvider('apple.com').credential(
-      idToken: appleCredential.identityToken,
-      accessToken: appleCredential.authorizationCode,
-    );
-    final result = await _auth.signInWithCredential(oauthCredential);
-    await _createUserDocument(result.user!);
-    return result;
   }
 
   Future<void> _createUserDocument(

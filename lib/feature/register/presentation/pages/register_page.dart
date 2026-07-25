@@ -5,8 +5,6 @@ import 'package:stay_awhile_mobile/const/app_size.dart';
 import 'package:stay_awhile_mobile/feature/register/presentation/viewmodels/register_viewmodel.dart';
 import 'package:stay_awhile_mobile/feature/register/presentation/widgets/register_brand_header_widget.dart';
 import 'package:stay_awhile_mobile/feature/register/presentation/widgets/register_card_widget.dart';
-import 'package:stay_awhile_mobile/feature/register/presentation/widgets/register_footer_widget.dart';
-import 'package:stay_awhile_mobile/feature/register/presentation/widgets/register_decorative_footer_widget.dart';
 
 /// Register page - handles user account creation.
 class RegisterPage extends StatefulWidget {
@@ -20,6 +18,7 @@ class _RegisterPageState extends State<RegisterPage> {
   late final TextEditingController _fullNameController;
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
+  late final TextEditingController _confirmPasswordController;
 
   @override
   void initState() {
@@ -27,6 +26,7 @@ class _RegisterPageState extends State<RegisterPage> {
     _fullNameController = TextEditingController();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
+    _confirmPasswordController = TextEditingController();
   }
 
   @override
@@ -34,6 +34,7 @@ class _RegisterPageState extends State<RegisterPage> {
     _fullNameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -45,15 +46,11 @@ class _RegisterPageState extends State<RegisterPage> {
       backgroundColor: AppColors.background,
       body: Stack(
         children: [
-          // Decorative background
           Positioned.fill(
             child: IgnorePointer(
-              child: CustomPaint(
-                painter: _BackgroundPainter(),
-              ),
+              child: CustomPaint(painter: _BackgroundPainter()),
             ),
           ),
-          // Main content
           Selector<RegisterViewmodel, RegisterStatus>(
             selector: (_, vm) => vm.status,
             builder: (_, status, _) {
@@ -62,24 +59,19 @@ class _RegisterPageState extends State<RegisterPage> {
                   horizontal: isMobile
                       ? AppSize.marginMobile
                       : AppSize.marginDesktop,
-                ).copyWith(
-                  top: AppSize.spacingXl,
-                  bottom: AppSize.spacingXl,
-                ),
+                ).copyWith(top: AppSize.spacingXl, bottom: AppSize.spacingXl),
                 child: Center(
                   child: ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 480),
                     child: Column(
                       children: [
                         const RegisterBrandHeaderWidget(),
-                        const SizedBox(height: AppSize.spacingXl),
                         RegisterCardWidget(
                           fullNameController: _fullNameController,
                           emailController: _emailController,
                           passwordController: _passwordController,
+                          confirmPasswordController: _confirmPasswordController,
                         ),
-                        const SizedBox(height: AppSize.spacingLg),
-                        const RegisterFooterWidget(),
                       ],
                     ),
                   ),
@@ -87,25 +79,19 @@ class _RegisterPageState extends State<RegisterPage> {
               );
             },
           ),
-          const RegisterDecorativeFooterWidget(),
         ],
       ),
     );
   }
 }
 
-/// Background painter for decorative blurred circles.
 class _BackgroundPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final greenPaint = Paint()
       ..color = AppColors.secondaryContainer.withValues(alpha: 0.2)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 120);
-    canvas.drawCircle(
-      const Offset(-96, -96),
-      192,
-      greenPaint,
-    );
+    canvas.drawCircle(const Offset(-96, -96), 192, greenPaint);
 
     final amberPaint = Paint()
       ..color = AppColors.primaryContainer.withValues(alpha: 0.2)

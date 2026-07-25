@@ -25,6 +25,8 @@ class DashboardMapCanvasWidget extends StatelessWidget {
       options: MapOptions(
         initialCenter: LatLng(centerLat, centerLng),
         initialZoom: 15,
+        minZoom: 3,
+        maxZoom: 18,
         interactionOptions: const InteractionOptions(
           flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
         ),

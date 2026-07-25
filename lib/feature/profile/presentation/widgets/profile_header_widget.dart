@@ -89,7 +89,7 @@ class ProfileHeaderWidget extends StatelessWidget {
           ),
           const SizedBox(height: AppSize.spacingXs),
           Text(
-            profile.bio,
+            profile.email,
             style: AppTextStyle.bodyMd.copyWith(
               color: AppColors.onSurfaceVariant,
             ),

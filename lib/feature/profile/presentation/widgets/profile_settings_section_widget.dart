@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stay_awhile_mobile/utils/widgets/paper_card.dart';
+import 'package:stay_awhile_mobile/utils/widgets/app_paper_card_widget.dart';
 import 'package:stay_awhile_mobile/feature/profile/presentation/widgets/profile_settings_item_widget.dart';
 
 /// Displays the App Settings section with rows for Notifications, Privacy, Language, Support.
@@ -19,7 +19,7 @@ class SettingsSectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PaperCard(
+    return AppPaperCardWidget(
       child: Column(
         children: [
           SettingsItemWidget(

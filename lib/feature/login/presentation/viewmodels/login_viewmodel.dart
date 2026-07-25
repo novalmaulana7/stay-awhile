@@ -33,13 +33,20 @@ class LoginViewmodel extends ChangeNotifier {
   bool _rememberMe = false;
   bool get rememberMe => _rememberMe;
 
+  Map<String, String?> _fieldErrors = {};
+  Map<String, String?> get fieldErrors => _fieldErrors;
+
+  bool get canSubmit => _email.isNotEmpty && _password.isNotEmpty;
+
   void setEmail(String value) {
     _email = value;
+    _clearFieldError('email');
     notifyListeners();
   }
 
   void setPassword(String value) {
     _password = value;
+    _clearFieldError('password');
     notifyListeners();
   }
 
@@ -53,9 +60,28 @@ class LoginViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void _clearFieldError(String field) {
+    if (_fieldErrors.containsKey(field)) {
+      _fieldErrors = Map.from(_fieldErrors)..remove(field);
+    }
+  }
+
+  bool _validate() {
+    _fieldErrors = {};
+
+    if (_email.trim().isEmpty) {
+      _fieldErrors['email'] = 'Email is required';
+    }
+    if (_password.isEmpty) {
+      _fieldErrors['password'] = 'Password is required';
+    }
+
+    return _fieldErrors.isEmpty;
+  }
+
   Future<void> login() async {
-    if (_email.isEmpty || _password.isEmpty) {
-      _errorMessage = 'Please fill in all fields';
+    if (!_validate()) {
+      _errorMessage = null;
       notifyListeners();
       return;
     }
@@ -129,6 +155,7 @@ class LoginViewmodel extends ChangeNotifier {
   void resetStatus() {
     _status = LoginStatus.initial;
     _errorMessage = null;
+    _fieldErrors = {};
     notifyListeners();
   }
 }

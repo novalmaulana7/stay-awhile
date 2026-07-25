@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:stay_awhile_mobile/const/app_colors.dart';
 import 'package:stay_awhile_mobile/const/app_textstyle.dart';
@@ -10,8 +9,6 @@ import 'package:stay_awhile_mobile/feature/profile/presentation/widgets/profile_
 import 'package:stay_awhile_mobile/feature/profile/presentation/widgets/profile_dropped_messages_section_widget.dart';
 import 'package:stay_awhile_mobile/feature/profile/presentation/widgets/profile_settings_section_widget.dart';
 import 'package:stay_awhile_mobile/feature/profile/presentation/widgets/profile_logout_section_widget.dart';
-import 'package:stay_awhile_mobile/route/app_routes.dart';
-import 'package:stay_awhile_mobile/utils/widgets/bottom_nav_widget.dart';
 
 /// Profile page — shows profile info, stats, dropped messages, settings, and logout.
 class ProfilePage extends StatefulWidget {
@@ -34,18 +31,6 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      bottomNavigationBar: BottomNavWidget(
-        items: const [
-          BottomNavItem(icon: Icons.map, label: 'Map'),
-          BottomNavItem(icon: Icons.explore, label: 'Explorer'),
-          BottomNavItem(icon: Icons.person, label: 'Profile'),
-        ],
-        activeIndex: 2,
-        onTabChanged: (index) {
-          final routes = [AppRoutes.dashboard, AppRoutes.explore, AppRoutes.profile];
-          context.go(routes[index]);
-        },
-      ),
       appBar: AppBar(
         backgroundColor: AppColors.surface,
         leading: const SizedBox(width: kToolbarHeight),

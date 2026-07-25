@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:stay_awhile_mobile/const/app_colors.dart';
 import 'package:stay_awhile_mobile/const/app_textstyle.dart';
 
-/// Button for social login options (Google, Apple).
-class SocialLoginButtonWidget extends StatelessWidget {
+/// Button for social login/signup options (Google, Apple).
+///
+/// Supports both inline ([Expanded]) and full-width layout via [isFullWidth].
+class LoginSocialButtonWidget extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
   final String? imageAsset;
   final bool isFullWidth;
 
-  const SocialLoginButtonWidget({
+  const LoginSocialButtonWidget({
     super.key,
     required this.text,
     required this.onPressed,
@@ -45,7 +47,6 @@ class SocialLoginButtonWidget extends StatelessWidget {
                   return const SizedBox(width: 20, height: 20);
                 },
               ),
-
             const SizedBox(width: 8),
             Text(text, style: AppTextStyle.labelMd),
           ],

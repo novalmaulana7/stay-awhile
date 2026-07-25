@@ -11,37 +11,43 @@ class RegisterFooterWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Selector<RegisterViewmodel, String?>(
-          selector: (_, vm) => vm.errorMessage,
-          builder: (_, errorMessage, __) {
-            if (errorMessage == null) return const SizedBox.shrink();
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: Text(
-                errorMessage,
-                style: AppTextStyle.bodyMd.copyWith(color: AppColors.error),
-                textAlign: TextAlign.center,
-              ),
-            );
-          },
-        ),
-        Text(
-          'Already have an account?',
-          style: AppTextStyle.bodyMd.copyWith(color: AppColors.onSurfaceVariant),
-        ),
-        TextButton(
-          onPressed: () => context.go('/login'),
-          child: Text(
-            'Sign In',
+    return SizedBox(
+      width: double.infinity,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Selector<RegisterViewmodel, String?>(
+            selector: (_, vm) => vm.errorMessage,
+            builder: (_, errorMessage, __) {
+              if (errorMessage == null) return const SizedBox.shrink();
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: Text(
+                  errorMessage,
+                  style: AppTextStyle.bodyMd.copyWith(color: AppColors.error),
+                  textAlign: TextAlign.center,
+                ),
+              );
+            },
+          ),
+          Text(
+            'Already have an account?',
             style: AppTextStyle.bodyMd.copyWith(
-              color: AppColors.primary,
-              fontWeight: FontWeight.bold,
+              color: AppColors.onSurfaceVariant,
             ),
           ),
-        ),
-      ],
+          TextButton(
+            onPressed: () => context.go('/login'),
+            child: Text(
+              'Sign In',
+              style: AppTextStyle.bodyMd.copyWith(
+                color: AppColors.primary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

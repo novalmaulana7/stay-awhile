@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:stay_awhile_mobile/const/app_colors.dart';
 import 'package:stay_awhile_mobile/const/app_size.dart';
-import 'package:stay_awhile_mobile/feature/register/presentation/viewmodels/register_viewmodel.dart';
+import 'package:stay_awhile_mobile/feature/register/presentation/widgets/register_footer_widget.dart';
 import 'package:stay_awhile_mobile/feature/register/presentation/widgets/register_header_section_widget.dart';
-import 'package:stay_awhile_mobile/feature/register/presentation/widgets/register_social_buttons_widget.dart';
 import 'package:stay_awhile_mobile/feature/register/presentation/widgets/register_form_widget.dart';
-import 'package:stay_awhile_mobile/feature/login/presentation/widgets/login_or_divider_widget.dart';
 
 /// Registration card container with all form elements.
 class RegisterCardWidget extends StatelessWidget {
   final TextEditingController fullNameController;
   final TextEditingController emailController;
   final TextEditingController passwordController;
+  final TextEditingController confirmPasswordController;
 
   const RegisterCardWidget({
     super.key,
     required this.fullNameController,
     required this.emailController,
     required this.passwordController,
+    required this.confirmPasswordController,
   });
 
   @override
@@ -43,22 +42,14 @@ class RegisterCardWidget extends StatelessWidget {
         children: [
           const RegisterHeaderSectionWidget(),
           const SizedBox(height: AppSize.spacingLg),
-          Consumer<RegisterViewmodel>(
-            builder: (_, vm, __) {
-              return RegisterSocialButtonsWidget(
-                onGoogleTap: () => vm.registerWithGoogle(),
-                onAppleTap: () => vm.registerWithApple(),
-              );
-            },
-          ),
-          const SizedBox(height: AppSize.spacingLg),
-          const OrDividerWidget(),
-          const SizedBox(height: AppSize.spacingLg),
           RegisterFormWidget(
             fullNameController: fullNameController,
             emailController: emailController,
             passwordController: passwordController,
+            confirmPasswordController: confirmPasswordController,
           ),
+          const SizedBox(height: AppSize.spacingLg),
+          const RegisterFooterWidget(),
         ],
       ),
     );

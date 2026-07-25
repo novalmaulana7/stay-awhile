@@ -8,6 +8,8 @@ import 'package:stay_awhile_mobile/feature/login/presentation/widgets/login_soci
 import 'package:stay_awhile_mobile/feature/login/presentation/widgets/login_or_divider_widget.dart';
 import 'package:stay_awhile_mobile/feature/login/presentation/widgets/login_form_widget.dart';
 
+import '../../../../const/app_assets.dart';
+
 /// Login card container widget with all login form elements.
 class LoginCardWidget extends StatelessWidget {
   final TextEditingController emailController;
@@ -21,43 +23,53 @@ class LoginCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest.withOpacity(0.8),
-        borderRadius: BorderRadius.circular(32),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 20,
-            offset: const Offset(0, 4),
+    return Column(
+      children: [
+        Image.asset(
+          AppAssets.logoAppBar,
+          width: 250,
+          height: 250,
+          fit: BoxFit.contain,
+        ),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: AppColors.surfaceContainerLowest.withOpacity(0.8),
+            borderRadius: BorderRadius.circular(32),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.04),
+                blurRadius: 20,
+                offset: const Offset(0, 4),
+              ),
+            ],
+            border: Border.all(color: const Color(0xFFE0DED7)),
           ),
-        ],
-        border: Border.all(color: const Color(0xFFE0DED7)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const LoginHeaderSectionWidget(),
-          const SizedBox(height: AppSize.spacingXl),
-          Consumer<LoginViewmodel>(
-            builder: (_, vm, __) {
-              return SocialLoginsRowWidget(
-                onGoogleTap: () => vm.loginWithGoogle(),
-                onAppleTap: () => vm.loginWithApple(),
-              );
-            },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const LoginHeaderSectionWidget(),
+              const SizedBox(height: AppSize.spacingXl),
+              Consumer<LoginViewmodel>(
+                builder: (_, vm, __) {
+                  return LoginSocialLoginsRowWidget(
+                    onGoogleTap: () => vm.loginWithGoogle(),
+                    onAppleTap: () => vm.loginWithApple(),
+                  );
+                },
+              ),
+              const SizedBox(height: AppSize.spacingXl),
+              const OrDividerWidget(),
+              const SizedBox(height: AppSize.spacingXl),
+              LoginFormWidget(
+                emailController: emailController,
+                passwordController: passwordController,
+              ),
+            ],
           ),
-          const SizedBox(height: AppSize.spacingXl),
-          const OrDividerWidget(),
-          const SizedBox(height: AppSize.spacingXl),
-          LoginFormWidget(
-            emailController: emailController,
-            passwordController: passwordController,
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

@@ -6,6 +6,10 @@ import 'package:stay_awhile_mobile/feature/dashboard/data/datasources/dashboard_
 import 'package:stay_awhile_mobile/feature/dashboard/data/repositories/dashboard_repository.dart';
 import 'package:stay_awhile_mobile/feature/dashboard/data/repositories/dashboard_repository_impl.dart';
 import 'package:stay_awhile_mobile/feature/dashboard/presentation/viewmodels/dashboard_viewmodel.dart';
+import 'package:stay_awhile_mobile/feature/drop/data/datasources/drop_remote_datasource.dart';
+import 'package:stay_awhile_mobile/feature/drop/data/repositories/drop_repository.dart';
+import 'package:stay_awhile_mobile/feature/drop/data/repositories/drop_repository_impl.dart';
+import 'package:stay_awhile_mobile/feature/drop/presentation/viewmodels/drop_viewmodel.dart';
 import 'package:stay_awhile_mobile/feature/explore/data/datasources/explore_remote_datasource.dart';
 import 'package:stay_awhile_mobile/feature/explore/data/repositories/explore_repository.dart';
 import 'package:stay_awhile_mobile/feature/explore/data/repositories/explore_repository_impl.dart';
@@ -122,6 +126,21 @@ abstract final class DependencyInjection {
     _getIt.registerFactory<ExploreViewmodel>(
       () => ExploreViewmodel(
         repository: _getIt<ExploreRepository>(),
+      ),
+    );
+
+    // ── Drop Feature ──
+    _getIt.registerLazySingleton<DropRemoteDataSource>(
+      () => DropRemoteDataSource(),
+    );
+    _getIt.registerLazySingleton<DropRepository>(
+      () => DropRepositoryImpl(
+        remoteDataSource: _getIt<DropRemoteDataSource>(),
+      ),
+    );
+    _getIt.registerFactory<DropViewmodel>(
+      () => DropViewmodel(
+        repository: _getIt<DropRepository>(),
       ),
     );
   }

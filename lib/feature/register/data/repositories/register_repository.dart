@@ -4,8 +4,4 @@ abstract class RegisterRepository {
     required String email,
     required String password,
   });
-
-  Future<String> registerWithGoogle();
-
-  Future<String> registerWithApple();
 }

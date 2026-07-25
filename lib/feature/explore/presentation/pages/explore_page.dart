@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:stay_awhile_mobile/const/app_colors.dart';
 import 'package:stay_awhile_mobile/const/app_size.dart';
@@ -9,8 +8,6 @@ import 'package:stay_awhile_mobile/feature/explore/presentation/viewmodels/explo
 import 'package:stay_awhile_mobile/feature/explore/presentation/widgets/explore_radius_slider_widget.dart';
 import 'package:stay_awhile_mobile/feature/explore/presentation/widgets/explore_message_grid_widget.dart';
 import 'package:stay_awhile_mobile/feature/explore/presentation/widgets/explore_fab_widget.dart';
-import 'package:stay_awhile_mobile/route/app_routes.dart';
-import 'package:stay_awhile_mobile/utils/widgets/bottom_nav_widget.dart';
 
 class ExplorePage extends StatefulWidget {
   const ExplorePage({super.key});
@@ -51,22 +48,6 @@ class _ExplorePageState extends State<ExplorePage> {
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavWidget(
-        items: const [
-          BottomNavItem(icon: Icons.map, label: 'Map'),
-          BottomNavItem(icon: Icons.explore, label: 'Explorer'),
-          BottomNavItem(icon: Icons.person, label: 'Profile'),
-        ],
-        activeIndex: 1,
-        onTabChanged: (index) {
-          final routes = [
-            AppRoutes.dashboard,
-            AppRoutes.explore,
-            AppRoutes.profile,
-          ];
-          context.go(routes[index]);
-        },
       ),
       body: Stack(
         children: [

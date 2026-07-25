@@ -1,48 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:stay_awhile_mobile/const/app_colors.dart';
-import 'package:stay_awhile_mobile/const/app_textstyle.dart';
+import 'package:provider/provider.dart';
+import 'package:stay_awhile_mobile/feature/login/presentation/viewmodels/login_viewmodel.dart';
+import 'package:stay_awhile_mobile/utils/widgets/app_rounded_loading_button_widget.dart';
 
-/// Sign in button widget.
+/// Sign in button for the login feature.
+///
+/// Delegates all animation logic to [AppRoundedLoadingButtonWidget].
+/// Calls [LoginViewmodel.login] and reports success/error accordingly.
 class SignInButtonWidget extends StatelessWidget {
-  final VoidCallback? onPressed;
-  final bool isLoading;
+  final LoginViewmodel viewmodel;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
 
   const SignInButtonWidget({
     super.key,
-    this.onPressed,
-    this.isLoading = false,
+    required this.viewmodel,
+    required this.emailController,
+    required this.passwordController,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: 56,
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primaryContainer,
-          foregroundColor: AppColors.onPrimaryContainer,
-          elevation: 8,
-          shadowColor: AppColors.primaryContainer.withOpacity(0.2),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(9999),
-          ),
-        ),
-        child: isLoading
-            ? const SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: AppColors.onPrimaryContainer,
-                ),
-              )
-            : Text(
-                'Sign In',
-                style: AppTextStyle.headlineMd,
-              ),
-      ),
+    return Selector<LoginViewmodel, bool>(
+      selector: (_, vm) => vm.canSubmit,
+      builder: (_, canSubmit, _) {
+        return AppRoundedLoadingButtonWidget(
+          label: 'Sign In',
+          isEnabled: canSubmit,
+          onPressed: () async {
+            viewmodel.setEmail(emailController.text);
+            viewmodel.setPassword(passwordController.text);
+            await viewmodel.login();
+            return viewmodel.status != LoginStatus.error;
+          },
+        );
+      },
     );
   }
 }

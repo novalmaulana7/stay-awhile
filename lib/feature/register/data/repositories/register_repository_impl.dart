@@ -29,30 +29,6 @@ class RegisterRepositoryImpl implements RegisterRepository {
     }
   }
 
-  @override
-  Future<String> registerWithGoogle() async {
-    try {
-      final result = await _remoteDataSource.registerWithGoogle();
-      return result.user?.uid ?? '';
-    } on FirebaseAuthException catch (e) {
-      throw _mapFirebaseError(e);
-    } catch (e) {
-      throw Exception('Google sign-in failed: ${e.toString()}');
-    }
-  }
-
-  @override
-  Future<String> registerWithApple() async {
-    try {
-      final result = await _remoteDataSource.registerWithApple();
-      return result.user?.uid ?? '';
-    } on FirebaseAuthException catch (e) {
-      throw _mapFirebaseError(e);
-    } catch (e) {
-      throw Exception('Apple sign-in failed: ${e.toString()}');
-    }
-  }
-
   String _mapFirebaseError(FirebaseAuthException e) {
     switch (e.code) {
       case 'email-already-in-use':
