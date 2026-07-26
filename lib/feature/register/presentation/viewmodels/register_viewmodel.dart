@@ -45,6 +45,64 @@ class RegisterViewmodel extends ChangeNotifier {
   Map<String, String?> _fieldErrors = {};
   Map<String, String?> get fieldErrors => _fieldErrors;
 
+  TextEditingController? _fullNameController;
+  TextEditingController? _emailController;
+  TextEditingController? _passwordController;
+  TextEditingController? _confirmPasswordController;
+
+  void attachControllers({
+    required TextEditingController fullNameController,
+    required TextEditingController emailController,
+    required TextEditingController passwordController,
+    required TextEditingController confirmPasswordController,
+  }) {
+    _fullNameController = fullNameController;
+    _emailController = emailController;
+    _passwordController = passwordController;
+    _confirmPasswordController = confirmPasswordController;
+    _fullName = fullNameController.text;
+    _email = emailController.text;
+    _password = passwordController.text;
+    _confirmPassword = confirmPasswordController.text;
+    fullNameController.addListener(_onFullNameChanged);
+    emailController.addListener(_onEmailChanged);
+    passwordController.addListener(_onPasswordChanged);
+    confirmPasswordController.addListener(_onConfirmPasswordChanged);
+  }
+
+  void _onFullNameChanged() {
+    _fullName = _fullNameController?.text ?? '';
+    _clearFieldError('fullName');
+    notifyListeners();
+  }
+
+  void _onEmailChanged() {
+    _email = _emailController?.text ?? '';
+    _clearFieldError('email');
+    notifyListeners();
+  }
+
+  void _onPasswordChanged() {
+    _password = _passwordController?.text ?? '';
+    _clearFieldError('password');
+    if (_confirmPassword.isNotEmpty && _password != _confirmPassword) {
+      _fieldErrors['confirmPassword'] = "Passwords don't match";
+    } else {
+      _clearFieldError('confirmPassword');
+    }
+    notifyListeners();
+  }
+
+  void _onConfirmPasswordChanged() {
+    _confirmPassword = _confirmPasswordController?.text ?? '';
+    if (_password.isNotEmpty && _confirmPassword != _password) {
+      _fieldErrors['confirmPassword'] = "Passwords don't match";
+    } else {
+      _clearFieldError('confirmPassword');
+    }
+    notifyListeners();
+  }
+
   void setFullName(String value) {
     _fullName = value;
     _clearFieldError('fullName');
@@ -61,7 +119,7 @@ class RegisterViewmodel extends ChangeNotifier {
     _password = value;
     _clearFieldError('password');
     if (_confirmPassword.isNotEmpty && value != _confirmPassword) {
-      _fieldErrors['confirmPassword'] = 'Passwords do not match';
+      _fieldErrors['confirmPassword'] = "Passwords don't match";
     } else {
       _clearFieldError('confirmPassword');
     }
@@ -71,7 +129,7 @@ class RegisterViewmodel extends ChangeNotifier {
   void setConfirmPassword(String value) {
     _confirmPassword = value;
     if (_password.isNotEmpty && value != _password) {
-      _fieldErrors['confirmPassword'] = 'Passwords do not match';
+      _fieldErrors['confirmPassword'] = "Passwords don't match";
     } else {
       _clearFieldError('confirmPassword');
     }
@@ -112,21 +170,23 @@ class RegisterViewmodel extends ChangeNotifier {
     _fieldErrors = {};
 
     if (_fullName.trim().isEmpty) {
-      _fieldErrors['fullName'] = 'Full name is required';
+      _fieldErrors['fullName'] = 'Please enter your full name';
     }
     if (_email.trim().isEmpty) {
-      _fieldErrors['email'] = 'Email is required';
+      _fieldErrors['email'] = 'Please enter your email';
+    } else if (!_email.contains('@')) {
+      _fieldErrors['email'] = 'Email must include @';
     }
     if (_password.isEmpty) {
-      _fieldErrors['password'] = 'Password is required';
+      _fieldErrors['password'] = 'Please enter a password';
     }
     if (_confirmPassword.isEmpty) {
-      _fieldErrors['confirmPassword'] = 'Confirm password is required';
+      _fieldErrors['confirmPassword'] = 'Please confirm your password';
     } else if (_password != _confirmPassword) {
-      _fieldErrors['confirmPassword'] = 'Passwords do not match';
+      _fieldErrors['confirmPassword'] = 'Passwords don\'t match';
     }
     if (!_agreeToTerms) {
-      _fieldErrors['agreeToTerms'] = 'You must agree to the terms';
+      _fieldErrors['agreeToTerms'] = 'Please agree to the terms';
     }
 
     return _fieldErrors.isEmpty;
@@ -134,6 +194,7 @@ class RegisterViewmodel extends ChangeNotifier {
 
   Future<void> register() async {
     if (!_validate()) {
+      _status = RegisterStatus.error;
       _errorMessage = null;
       notifyListeners();
       return;

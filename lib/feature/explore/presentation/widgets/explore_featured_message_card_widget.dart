@@ -6,11 +6,13 @@ import 'package:stay_awhile_mobile/feature/explore/data/models/explore_model.dar
 
 class ExploreFeaturedMessageCardWidget extends StatelessWidget {
   final NearbyMessage message;
+  final bool isOwn;
   final VoidCallback? onLikeTap;
 
   const ExploreFeaturedMessageCardWidget({
     super.key,
     required this.message,
+    this.isOwn = false,
     this.onLikeTap,
   });
 
@@ -47,13 +49,17 @@ class ExploreFeaturedMessageCardWidget extends StatelessWidget {
                       errorBuilder: (_, __, ___) => Container(
                         width: 48,
                         height: 48,
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: AppColors.surfaceContainerHigh,
+                          color: isOwn
+                              ? AppColors.primaryContainer
+                              : AppColors.surfaceContainerHigh,
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Icons.person,
-                          color: AppColors.onSurfaceVariant,
+                          color: isOwn
+                              ? AppColors.onPrimaryContainer
+                              : AppColors.onSurfaceVariant,
                         ),
                       ),
                     ),
@@ -63,8 +69,12 @@ class ExploreFeaturedMessageCardWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        message.authorName,
-                        style: AppTextStyle.labelMd,
+                        isOwn ? 'You' : message.authorName,
+                        style: AppTextStyle.labelMd.copyWith(
+                          color: isOwn ? AppColors.primary : null,
+                          fontWeight:
+                              isOwn ? FontWeight.w600 : null,
+                        ),
                       ),
                       Text(
                         '${message.timeAgo} • ${message.distance}',

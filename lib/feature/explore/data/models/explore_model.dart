@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class NearbyMessage {
   final String id;
+  final String authorId;
   final String authorName;
   final String? authorPhotoUrl;
   final String text;
@@ -16,6 +17,7 @@ class NearbyMessage {
 
   NearbyMessage({
     required this.id,
+    required this.authorId,
     required this.authorName,
     this.authorPhotoUrl,
     required this.text,
@@ -36,6 +38,7 @@ class NearbyMessage {
   }) {
     return NearbyMessage(
       id: docId,
+      authorId: data['authorId'] as String? ?? '',
       authorName: data['authorName'] as String? ?? 'Anonymous',
       authorPhotoUrl: data['authorPhotoUrl'] as String?,
       text: data['text'] as String? ?? '',
@@ -55,6 +58,7 @@ class NearbyMessage {
   factory NearbyMessage.fromJson(Map<String, dynamic> json) {
     return NearbyMessage(
       id: json['id'] as String,
+      authorId: json['authorId'] as String? ?? '',
       authorName: json['authorName'] as String,
       authorPhotoUrl: json['authorPhotoUrl'] as String?,
       text: json['text'] as String,
@@ -71,6 +75,7 @@ class NearbyMessage {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'authorId': authorId,
       'authorName': authorName,
       'authorPhotoUrl': authorPhotoUrl,
       'text': text,

@@ -4,91 +4,76 @@ import 'package:stay_awhile_mobile/const/app_textstyle.dart';
 
 class DashboardMarkerWidget extends StatelessWidget {
   final String message;
-  final String icon;
   final bool isOwn;
+  final double markerLat;
+  final double userLat;
   final VoidCallback? onTap;
 
   const DashboardMarkerWidget({
     super.key,
     required this.message,
-    required this.icon,
+    required this.markerLat,
+    required this.userLat,
     this.isOwn = false,
     this.onTap,
   });
 
-  IconData _getIconData() {
-    switch (icon) {
-      case 'park':
-        return Icons.park;
-      case 'coffee':
-        return Icons.coffee;
-      case 'camera':
-        return Icons.camera_alt;
-      default:
-        return Icons.place;
-    }
-  }
+  bool get _bubbleAbove => markerLat >= userLat;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    final bubbleColor = isOwn
+        ? AppColors.secondary
+        : AppColors.surfaceContainerHighest;
+    final textColor = isOwn ? AppColors.onTertiary : AppColors.onSurfaceVariant;
+    final borderColor = isOwn
+        ? null
+        : Border.all(color: AppColors.outlineVariant);
+
+    final pointWidget = Container(
+      width: 12,
+      height: 12,
+      transform: Matrix4.rotationZ(0.785398),
+      decoration: BoxDecoration(color: bubbleColor, border: borderColor),
+    );
+
+    final bubbleWidget = GestureDetector(
       onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: isOwn ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 8,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: bubbleColor,
+          borderRadius: BorderRadius.circular(16),
+          border: borderColor,
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x1A000000),
+              blurRadius: 8,
+              offset: Offset(0, 2),
             ),
-            decoration: BoxDecoration(
-              color: isOwn ? AppColors.secondary : AppColors.surfaceContainerHighest,
-              borderRadius: BorderRadius.only(
-                topLeft: const Radius.circular(16),
-                topRight: const Radius.circular(16),
-                bottomLeft: Radius.circular(isOwn ? 16 : 4),
-                bottomRight: Radius.circular(isOwn ? 4 : 16),
-              ),
-              border: isOwn ? null : Border.all(color: AppColors.outlineVariant),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x1A000000),
-                  blurRadius: 8,
-                  offset: Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  _getIconData(),
-                  size: 16,
-                  color: isOwn ? AppColors.onTertiary : AppColors.onSurfaceVariant,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  message,
-                  style: AppTextStyle.labelSm.copyWith(
-                    color: isOwn ? AppColors.onTertiary : AppColors.onSurfaceVariant,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            width: 12,
-            height: 12,
-            transform: Matrix4.rotationZ(0.785398),
-            margin: const EdgeInsets.only(left: 1),
-            decoration: BoxDecoration(
-              color: isOwn ? AppColors.secondary : AppColors.surfaceContainerHighest,
-              border: isOwn ? null : Border.all(color: AppColors.outlineVariant),
-            ),
-          ),
-        ],
+          ],
+        ),
+        child: Text(
+          message,
+          style: AppTextStyle.labelSm.copyWith(color: textColor),
+        ),
       ),
     );
+
+    if (_bubbleAbove) {
+      // pesan di atas user → bubble naik ke atas
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        verticalDirection: VerticalDirection.down,
+        children: [pointWidget, const SizedBox(height: 4), bubbleWidget],
+      );
+    } else {
+      // pesan di bawah user → bubble turun ke bawah
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        verticalDirection: VerticalDirection.up,
+        children: [pointWidget, const SizedBox(height: 4), bubbleWidget],
+      );
+    }
   }
 }

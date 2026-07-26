@@ -19,12 +19,12 @@ final GoRouter appRouter = GoRouter(
   refreshListenable: authNotifier,
   redirect: (context, state) {
     final user = authNotifier.currentUser;
+    final isRegister = state.matchedLocation == AppRoutes.register;
     final onAuthRoute =
         state.matchedLocation == AppRoutes.splash ||
-        state.matchedLocation == AppRoutes.login ||
-        state.matchedLocation == AppRoutes.register;
+        state.matchedLocation == AppRoutes.login;
 
-    if (user == null && !onAuthRoute) return AppRoutes.login;
+    if (user == null && !onAuthRoute && !isRegister) return AppRoutes.login;
     if (user != null && onAuthRoute) return AppRoutes.dashboard;
     return null;
   },

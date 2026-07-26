@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
@@ -14,16 +12,8 @@ class DropRemoteDataSource {
   })  : _firestore = firestore ?? FirebaseFirestore.instance,
         _auth = auth ?? FirebaseAuth.instance;
 
-  /// Uploads image to a temporary hosting solution.
-  /// TODO: API — replace with Firebase Storage upload when ready.
-  Future<String?> uploadImage(File imageFile) async {
-    // TODO: API — implement Firebase Storage upload
-    return null;
-  }
-
   Future<void> dropMessage({
     required String text,
-    required String category,
     required double lat,
     required double lng,
     String? locationLabel,
@@ -41,7 +31,6 @@ class DropRemoteDataSource {
       'authorId': user.uid,
       'authorName': user.displayName ?? 'Anonymous',
       'text': text,
-      'category': category,
       'imageUrl': imageUrl,
       'locationLabel': locationLabel,
       'createdAt': FieldValue.serverTimestamp(),

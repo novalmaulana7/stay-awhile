@@ -101,7 +101,7 @@ class _MobileNav extends StatelessWidget {
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
       child: ColoredBox(
-        color: AppColors.surface,
+        color: AppColors.white,
         child: Padding(
           padding: EdgeInsets.only(bottom: bottomInset),
           child: Container(
@@ -109,16 +109,7 @@ class _MobileNav extends StatelessWidget {
               horizontal: AppSize.spacingMd,
               vertical: AppSize.spacingSm,
             ),
-            decoration: const BoxDecoration(
-              color: AppColors.surface,
-              boxShadow: [
-                BoxShadow(
-                  color: Color(0x0A000000),
-                  blurRadius: 20,
-                  offset: Offset(0, -4),
-                ),
-              ],
-            ),
+            decoration: const BoxDecoration(color: AppColors.white),
             child: Row(
               children: List.generate(items.length, (i) {
                 final item = items[i];

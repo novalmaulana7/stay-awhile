@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:stay_awhile_mobile/feature/explore/data/models/explore_model.dart';
@@ -16,12 +17,17 @@ enum ExploreStatus {
 class ExploreViewmodel extends ChangeNotifier {
   final ExploreRepository _repository;
   final LocationService _locationService;
+  final FirebaseAuth _auth;
 
   ExploreViewmodel({
     required ExploreRepository repository,
     LocationService? locationService,
+    FirebaseAuth? auth,
   })  : _repository = repository,
-        _locationService = locationService ?? LocationService();
+        _locationService = locationService ?? LocationService(),
+        _auth = auth ?? FirebaseAuth.instance;
+
+  String? get currentUserId => _auth.currentUser?.uid;
 
   ExploreStatus _status = ExploreStatus.initial;
   ExploreStatus get status => _status;
@@ -98,6 +104,7 @@ class ExploreViewmodel extends ChangeNotifier {
     final old = _messages[index];
     _messages[index] = NearbyMessage(
       id: old.id,
+      authorId: old.authorId,
       authorName: old.authorName,
       authorPhotoUrl: old.authorPhotoUrl,
       text: old.text,

@@ -14,30 +14,23 @@ class DashboardRemoteDataSource {
         _auth = auth ?? FirebaseAuth.instance;
 
   Future<List<MapMarker>> getMapMarkers() async {
-    // TODO: Replace with real Firestore geo query after Phase 5
-    return [
-      MapMarker(
-        id: '1',
-        message: 'Found a quiet bench...',
-        icon: 'park',
-        lat: -6.8912,
-        lng: 107.6110,
-      ),
-      MapMarker(
-        id: '2',
-        message: 'Great morning light here.',
-        icon: 'coffee',
-        lat: -6.8950,
-        lng: 107.6150,
-      ),
-      MapMarker(
-        id: '3',
-        message: 'Look up at the oak!',
-        icon: 'camera',
-        lat: -6.8880,
-        lng: 107.6080,
-      ),
-    ];
+    final user = _auth.currentUser;
+    final snapshot = await _firestore.collection('messages').get();
+
+    return snapshot.docs.map((doc) {
+      final data = doc.data();
+      final geo = data['geo'] as Map<String, dynamic>?;
+      final geopoint = geo?['geopoint'] as GeoPoint?;
+
+      return MapMarker(
+        id: doc.id,
+        message: data['text'] as String? ?? '',
+        icon: 'place',
+        lat: geopoint?.latitude ?? 0,
+        lng: geopoint?.longitude ?? 0,
+        isOwn: user != null && (data['authorId'] as String?) == user.uid,
+      );
+    }).toList();
   }
 
   Future<LocationInfo> getCurrentLocation() async {

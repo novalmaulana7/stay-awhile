@@ -36,7 +36,34 @@ class LoginViewmodel extends ChangeNotifier {
   Map<String, String?> _fieldErrors = {};
   Map<String, String?> get fieldErrors => _fieldErrors;
 
+  TextEditingController? _emailController;
+  TextEditingController? _passwordController;
+
   bool get canSubmit => _email.isNotEmpty && _password.isNotEmpty;
+
+  void attachControllers({
+    required TextEditingController emailController,
+    required TextEditingController passwordController,
+  }) {
+    _emailController = emailController;
+    _passwordController = passwordController;
+    _email = emailController.text;
+    _password = passwordController.text;
+    emailController.addListener(_onEmailChanged);
+    passwordController.addListener(_onPasswordChanged);
+  }
+
+  void _onEmailChanged() {
+    _email = _emailController?.text ?? '';
+    _clearFieldError('email');
+    notifyListeners();
+  }
+
+  void _onPasswordChanged() {
+    _password = _passwordController?.text ?? '';
+    _clearFieldError('password');
+    notifyListeners();
+  }
 
   void setEmail(String value) {
     _email = value;
@@ -70,10 +97,12 @@ class LoginViewmodel extends ChangeNotifier {
     _fieldErrors = {};
 
     if (_email.trim().isEmpty) {
-      _fieldErrors['email'] = 'Email is required';
+      _fieldErrors['email'] = 'Please enter your email';
+    } else if (!_email.contains('@')) {
+      _fieldErrors['email'] = 'Email must include @';
     }
     if (_password.isEmpty) {
-      _fieldErrors['password'] = 'Password is required';
+      _fieldErrors['password'] = 'Please enter your password';
     }
 
     return _fieldErrors.isEmpty;
@@ -81,6 +110,7 @@ class LoginViewmodel extends ChangeNotifier {
 
   Future<void> login() async {
     if (!_validate()) {
+      _status = LoginStatus.error;
       _errorMessage = null;
       notifyListeners();
       return;

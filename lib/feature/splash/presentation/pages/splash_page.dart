@@ -16,8 +16,7 @@ class SplashPage extends StatefulWidget {
   State<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashPageState extends State<SplashPage>
-    with TickerProviderStateMixin {
+class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   late final AnimationController _bounceController;
   late final AnimationController _fadeInController;
   late final AnimationController _slideUpController;
@@ -138,9 +137,8 @@ class _SplashPageState extends State<SplashPage>
               children: [
                 AnimatedBuilder(
                   animation: _bounceAnimation,
-                  builder: (_, __) => SplashLogoWidget(
-                    bounceOffset: _bounceAnimation.value,
-                  ),
+                  builder: (_, __) =>
+                      SplashLogoWidget(bounceOffset: _bounceAnimation.value),
                 ),
                 const SizedBox(height: AppSize.spacingLg),
                 AnimatedBuilder(
@@ -165,9 +163,8 @@ class _SplashPageState extends State<SplashPage>
             child: Center(
               child: AnimatedBuilder(
                 animation: _ornamentAnimation,
-                builder: (_, __) => SplashOrnamentWidget(
-                  opacity: _ornamentAnimation.value,
-                ),
+                builder: (_, __) =>
+                    SplashOrnamentWidget(opacity: _ornamentAnimation.value),
               ),
             ),
           ),

@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide RefreshIndicator;
+import 'package:flutter_refresh_indicator/flutter_refresh_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:stay_awhile_mobile/const/app_colors.dart';
 import 'package:stay_awhile_mobile/const/app_textstyle.dart';
@@ -96,47 +97,51 @@ class _ProfilePageState extends State<ProfilePage> {
           final profile = vm.profile;
           if (profile == null) return const SizedBox.shrink();
 
-          return SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSize.marginMobile,
-            ).copyWith(top: AppSize.spacingLg, bottom: 128),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ProfileHeaderWidget(
-                  profile: profile,
-                  onEditProfile: vm.onEditProfile,
-                ),
-                const SizedBox(height: AppSize.spacingXl),
-                StatsBentoGridWidget(profile: profile),
-                const SizedBox(height: AppSize.spacingXl),
-                DroppedMessagesSectionWidget(
-                  messages: vm.droppedMessages,
-                  onViewAll: vm.onViewAllMessages,
-                  onEditMessage: vm.onEditMessage,
-                  onDeleteMessage: (id) =>
-                      vm.confirmAndDeleteMessage(context, id),
-                ),
-                const SizedBox(height: AppSize.spacingXl),
-                Text(
-                  'App Settings',
-                  style: AppTextStyle.headlineMd.copyWith(
-                    color: AppColors.onSurface,
+          return RefreshIndicator(
+            onRefresh: () => vm.loadProfile(),
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSize.marginMobile,
+              ).copyWith(top: AppSize.spacingLg, bottom: 128),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ProfileHeaderWidget(
+                    profile: profile,
+                    onEditProfile: vm.onEditProfile,
                   ),
-                ),
-                const SizedBox(height: AppSize.spacingMd),
-                SettingsSectionWidget(
-                  onNotifications: vm.onSettingsNotifications,
-                  onPrivacy: vm.onSettingsPrivacy,
-                  onLanguage: vm.onSettingsLanguage,
-                  onSupport: vm.onSettingsSupport,
-                ),
-                const SizedBox(height: AppSize.spacingXl),
-                LogoutSectionWidget(
-                  appVersion: profile.appVersion,
-                  onLogout: vm.onLogout,
-                ),
-              ],
+                  const SizedBox(height: AppSize.spacingXl),
+                  StatsBentoGridWidget(profile: profile),
+                  const SizedBox(height: AppSize.spacingXl),
+                  DroppedMessagesSectionWidget(
+                    messages: vm.droppedMessages,
+                    onViewAll: vm.onViewAllMessages,
+                    onEditMessage: vm.onEditMessage,
+                    onDeleteMessage: (id) =>
+                        vm.confirmAndDeleteMessage(context, id),
+                  ),
+                  const SizedBox(height: AppSize.spacingXl),
+                  Text(
+                    'App Settings',
+                    style: AppTextStyle.headlineMd.copyWith(
+                      color: AppColors.onSurface,
+                    ),
+                  ),
+                  const SizedBox(height: AppSize.spacingMd),
+                  SettingsSectionWidget(
+                    onNotifications: vm.onSettingsNotifications,
+                    onPrivacy: vm.onSettingsPrivacy,
+                    onLanguage: vm.onSettingsLanguage,
+                    onSupport: vm.onSettingsSupport,
+                  ),
+                  const SizedBox(height: AppSize.spacingXl),
+                  LogoutSectionWidget(
+                    appVersion: profile.appVersion,
+                    onLogout: vm.onLogout,
+                  ),
+                ],
+              ),
             ),
           );
         },

@@ -7,8 +7,13 @@ import 'package:stay_awhile_mobile/feature/explore/presentation/widgets/explore_
 
 class ExploreMessageGridWidget extends StatelessWidget {
   final List<NearbyMessage> messages;
+  final String? currentUserId;
 
-  const ExploreMessageGridWidget({super.key, required this.messages});
+  const ExploreMessageGridWidget({
+    super.key,
+    required this.messages,
+    this.currentUserId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +63,8 @@ class ExploreMessageGridWidget extends StatelessWidget {
   }
 
   Widget _buildCard(NearbyMessage msg, bool isFeatured) {
+    final isOwn = currentUserId != null && msg.authorId == currentUserId;
+
     if (msg.isCommunityNote) {
       return Padding(
         padding: const EdgeInsets.only(bottom: AppSize.gutter),
@@ -68,13 +75,19 @@ class ExploreMessageGridWidget extends StatelessWidget {
     if (isFeatured || msg.isPinned) {
       return Padding(
         padding: const EdgeInsets.only(bottom: AppSize.gutter),
-        child: ExploreFeaturedMessageCardWidget(message: msg),
+        child: ExploreFeaturedMessageCardWidget(
+          message: msg,
+          isOwn: isOwn,
+        ),
       );
     }
 
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSize.gutter),
-      child: ExploreMessageCardWidget(message: msg),
+      child: ExploreMessageCardWidget(
+        message: msg,
+        isOwn: isOwn,
+      ),
     );
   }
 }

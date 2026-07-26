@@ -27,6 +27,14 @@ class _RegisterPageState extends State<RegisterPage> {
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
     _confirmPasswordController = TextEditingController();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<RegisterViewmodel>().attachControllers(
+        fullNameController: _fullNameController,
+        emailController: _emailController,
+        passwordController: _passwordController,
+        confirmPasswordController: _confirmPasswordController,
+      );
+    });
   }
 
   @override

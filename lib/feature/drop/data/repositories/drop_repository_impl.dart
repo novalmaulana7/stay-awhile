@@ -10,7 +10,6 @@ class DropRepositoryImpl implements DropRepository {
   @override
   Future<void> dropMessage({
     required String text,
-    required String category,
     required double lat,
     required double lng,
     String? locationLabel,
@@ -19,7 +18,6 @@ class DropRepositoryImpl implements DropRepository {
     try {
       await _remoteDataSource.dropMessage(
         text: text,
-        category: category,
         lat: lat,
         lng: lng,
         locationLabel: locationLabel,

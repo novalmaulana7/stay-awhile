@@ -24,26 +24,6 @@ class DroppedMessageItemWidget extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ── Thumbnail ──
-          ClipRRect(
-            borderRadius: BorderRadius.circular(AppSize.radiusLg),
-            child: SizedBox(
-              width: 64,
-              height: 64,
-              child: Image.network(
-                message.imageUrl,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  color: AppColors.surfaceContainerHighest,
-                  child: const Icon(
-                    Icons.image,
-                    color: AppColors.onSurfaceVariant,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: AppSize.spacingMd),
           // ── Content ──
           Expanded(
             child: Column(
@@ -97,16 +77,6 @@ class DroppedMessageItemWidget extends StatelessWidget {
                       splashRadius: 16,
                     ),
                   ],
-                ),
-                const SizedBox(height: AppSize.spacingSm),
-                Text(
-                  message.previewText,
-                  style: AppTextStyle.bodyMd.copyWith(
-                    color: AppColors.onSurfaceVariant,
-                    fontStyle: FontStyle.italic,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),

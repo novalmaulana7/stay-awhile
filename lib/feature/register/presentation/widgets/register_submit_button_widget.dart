@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:stay_awhile_mobile/feature/register/presentation/viewmodels/register_viewmodel.dart';
 import 'package:stay_awhile_mobile/route/app_routes.dart';
 import 'package:stay_awhile_mobile/utils/widgets/app_rounded_loading_button_widget.dart';
+import 'package:stay_awhile_mobile/utils/widgets/app_toast_widget.dart';
 
 /// Register submit button for the registration feature.
 ///
@@ -31,6 +32,7 @@ class RegisterSubmitButtonWidget extends StatelessWidget {
         return AppRoundedLoadingButtonWidget(
           label: 'Create Account',
           isEnabled: canSubmit,
+          resetDuration: const Duration(seconds: 3),
           onPressed: () async {
             final vm = context.read<RegisterViewmodel>();
             vm.setFullName(fullNameController.text);
@@ -38,7 +40,16 @@ class RegisterSubmitButtonWidget extends StatelessWidget {
             vm.setPassword(passwordController.text);
             vm.setConfirmPassword(confirmPasswordController.text);
             await vm.register();
-            if (vm.status == RegisterStatus.error) return false;
+            if (!context.mounted) return false;
+            if (vm.status == RegisterStatus.error) {
+              AppToast.showError(
+                context,
+                title: 'Registration Failed',
+                message: vm.errorMessage ??
+                    'Something went wrong. Please try again.',
+              );
+              return false;
+            }
             if (context.mounted) {
               context.go(AppRoutes.login);
             }

@@ -19,8 +19,6 @@ class SplashViewmodel extends ChangeNotifier {
 
   Future<void> requestLocationPermission() async {
     _permissionStatus = LocationPermissionStatus.requesting;
-    // Defer notifyListeners to avoid "setState() called during build" error
-    // when this method is called from initState (during build phase)
     await Future.microtask(() => notifyListeners());
 
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();

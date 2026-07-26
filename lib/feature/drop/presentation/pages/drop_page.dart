@@ -6,8 +6,6 @@ import 'package:stay_awhile_mobile/const/app_size.dart';
 import 'package:stay_awhile_mobile/const/app_textstyle.dart';
 import 'package:stay_awhile_mobile/feature/drop/presentation/viewmodels/drop_viewmodel.dart';
 import 'package:stay_awhile_mobile/feature/drop/presentation/widgets/drop_message_input_widget.dart';
-import 'package:stay_awhile_mobile/feature/drop/presentation/widgets/drop_category_picker_widget.dart';
-import 'package:stay_awhile_mobile/feature/drop/presentation/widgets/drop_media_attachment_widget.dart';
 import 'package:stay_awhile_mobile/feature/drop/presentation/widgets/drop_location_preview_widget.dart';
 import 'package:stay_awhile_mobile/feature/drop/presentation/widgets/drop_bottom_action_widget.dart';
 
@@ -85,10 +83,6 @@ class _DropPageState extends State<DropPage> {
                       context.read<DropViewmodel>().setMessage(value);
                     },
                   ),
-                  const SizedBox(height: AppSize.spacingXl),
-                  const DropCategoryPickerWidget(),
-                  const SizedBox(height: AppSize.spacingXl),
-                  const DropMediaAttachmentWidget(),
                   const SizedBox(height: AppSize.spacingXl),
                   DropLocationPreviewWidget(
                     locationLabel: locationLabel,

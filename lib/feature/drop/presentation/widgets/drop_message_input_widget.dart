@@ -43,7 +43,27 @@ class DropMessageInputWidget extends StatelessWidget {
           child: TextField(
             controller: controller,
             onChanged: onChanged,
+            maxLength: 500,
             maxLines: 6,
+            buildCounter: (
+              context, {
+              required currentLength,
+              required isFocused,
+              required maxLength,
+            }) {
+              return Padding(
+                padding: const EdgeInsets.only(top: AppSize.spacingXs),
+                child: Text(
+                  '$currentLength / $maxLength',
+                  style: AppTextStyle.labelSm.copyWith(
+                    color: currentLength >= maxLength!
+                        ? AppColors.error
+                        : AppColors.outlineVariant,
+                  ),
+                  textAlign: TextAlign.end,
+                ),
+              );
+            },
             keyboardType: TextInputType.multiline,
             style: AppTextStyle.bodyLg.copyWith(color: AppColors.onSurface),
             decoration: InputDecoration(

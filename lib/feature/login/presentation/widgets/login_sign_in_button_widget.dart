@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stay_awhile_mobile/feature/login/presentation/viewmodels/login_viewmodel.dart';
 import 'package:stay_awhile_mobile/utils/widgets/app_rounded_loading_button_widget.dart';
+import 'package:stay_awhile_mobile/utils/widgets/app_toast_widget.dart';
 
 /// Sign in button for the login feature.
 ///
@@ -27,10 +28,21 @@ class SignInButtonWidget extends StatelessWidget {
         return AppRoundedLoadingButtonWidget(
           label: 'Sign In',
           isEnabled: canSubmit,
+          resetDuration: const Duration(seconds: 3),
           onPressed: () async {
             viewmodel.setEmail(emailController.text);
             viewmodel.setPassword(passwordController.text);
             await viewmodel.login();
+            if (!context.mounted) return false;
+            if (viewmodel.status == LoginStatus.error) {
+              AppToast.showError(
+                context,
+                title: 'Login Failed',
+                message:
+                    viewmodel.errorMessage ??
+                    'Something went wrong. Please try again.',
+              );
+            }
             return viewmodel.status != LoginStatus.error;
           },
         );

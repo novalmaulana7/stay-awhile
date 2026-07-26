@@ -15,6 +15,7 @@ import 'package:stay_awhile_mobile/feature/login/presentation/viewmodels/login_v
 import 'package:stay_awhile_mobile/feature/register/presentation/viewmodels/register_viewmodel.dart';
 import 'package:stay_awhile_mobile/feature/splash/presentation/viewmodels/splash_viewmodel.dart';
 import 'package:stay_awhile_mobile/route/app_router.dart';
+import 'package:toastification/toastification.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,9 +40,10 @@ class StayAwhileApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => GetIt.I<ExploreViewmodel>()),
         ChangeNotifierProvider(create: (_) => GetIt.I<DropViewmodel>()),
       ],
-      child: MaterialApp.router(
-        title: 'Stay Awhile',
-        debugShowCheckedModeBanner: false,
+      child: ToastificationWrapper(
+        child: MaterialApp.router(
+          title: 'Stay Awhile',
+          debugShowCheckedModeBanner: false,
 
         // ── Theme ──
         theme: ThemeData(
@@ -84,6 +86,7 @@ class StayAwhileApp extends StatelessWidget {
 
         // ── Router ──
         routerConfig: appRouter,
+        ),
       ),
     );
   }

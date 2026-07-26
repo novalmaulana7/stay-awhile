@@ -22,6 +22,12 @@ class _LoginPageState extends State<LoginPage> {
     super.initState();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<LoginViewmodel>().attachControllers(
+        emailController: _emailController,
+        passwordController: _passwordController,
+      );
+    });
   }
 
   @override

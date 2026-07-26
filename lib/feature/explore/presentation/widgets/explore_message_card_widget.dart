@@ -6,11 +6,13 @@ import 'package:stay_awhile_mobile/feature/explore/data/models/explore_model.dar
 
 class ExploreMessageCardWidget extends StatelessWidget {
   final NearbyMessage message;
+  final bool isOwn;
   final VoidCallback? onLikeTap;
 
   const ExploreMessageCardWidget({
     super.key,
     required this.message,
+    this.isOwn = false,
     this.onLikeTap,
   });
 
@@ -35,15 +37,23 @@ class ExploreMessageCardWidget extends StatelessWidget {
         children: [
           Row(
             children: [
-              _Avatar(url: message.authorPhotoUrl, name: message.authorName),
+              _Avatar(
+                url: message.authorPhotoUrl,
+                name: message.authorName,
+                isOwn: isOwn,
+              ),
               const SizedBox(width: AppSize.spacingSm),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      message.authorName,
-                      style: AppTextStyle.labelMd,
+                      isOwn ? 'You' : message.authorName,
+                      style: AppTextStyle.labelMd.copyWith(
+                        color: isOwn ? AppColors.primary : null,
+                        fontWeight:
+                            isOwn ? FontWeight.w600 : null,
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -96,8 +106,13 @@ class ExploreMessageCardWidget extends StatelessWidget {
 class _Avatar extends StatelessWidget {
   final String? url;
   final String name;
+  final bool isOwn;
 
-  const _Avatar({required this.url, required this.name});
+  const _Avatar({
+    required this.url,
+    required this.name,
+    this.isOwn = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -105,13 +120,15 @@ class _Avatar extends StatelessWidget {
       return Container(
         width: 40,
         height: 40,
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: AppColors.surfaceContainerHigh,
+          color: isOwn
+              ? AppColors.primaryContainer
+              : AppColors.surfaceContainerHigh,
         ),
-        child: const Icon(
-          Icons.person,
-          color: AppColors.onSurfaceVariant,
+        child: Icon(
+          isOwn ? Icons.person : Icons.person,
+          color: isOwn ? AppColors.onPrimaryContainer : AppColors.onSurfaceVariant,
           size: 20,
         ),
       );
